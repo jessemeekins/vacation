@@ -16,6 +16,8 @@ file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
 with st.sidebar:
 
+    vf = vf()
+
     current, previous = vf.current_previous_bidders(file, SHIFT, DIVISION)
 
     num =st.selectbox('Navigate to a Line', [i for i in range(1,42)])
