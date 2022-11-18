@@ -4,7 +4,7 @@ import pandas as pd
 
 file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
-vf = vf()
+
 
 class LineGenerator:
 

@@ -7,7 +7,8 @@ curs = conn.cursor()
 
 class VacationFunctions:
 
-    def edit_index_counter(index_number, shift, division):
+
+    def edit_index_counter( index_number, shift, division):
         curs.execute("UPDATE counter SET count = (?) WHERE shift = (?) AND division = (?)", (index_number, shift, division))
         conn.commit()
 
@@ -16,8 +17,8 @@ class VacationFunctions:
         count = count.fetchall()[0][0]
         return count
 
-    def current_previous_bidders(self, file, SHIFT, DIVISION):
-        index = VacationFunctions.get_index_counter(SHIFT, DIVISION)
+    def current_previous_bidders( file, SHIFT, DIVISION):
+        index = VacationFunctions.get_index_counter( SHIFT, DIVISION)
 
         df = pd.DataFrame(file)
 
@@ -55,7 +56,7 @@ class VacationFunctions:
         data = data.fetchall()
         return data
 
-    def get_num(line):
+    def get_num( line):
         num = curs.execute("SELECT available FROM vacation_lines WHERE line=(?)", (line,))
         return num.fetchone()[0]
         #c.execute("SELECT available FROM vacation_lines WHERE line=line", {'line': num}):
@@ -65,7 +66,7 @@ class VacationFunctions:
         num = curs.execute("SELECT quantitiy FROM mfd_vacations WHERE shift = (?) AND division = (?) AND line_number = (?) AND number_of_days = (?)", (shift, division, line_num, type,))
         return num.fetchall()[0][0]
 
-    def add_bid(_line, _num, shift, div, line, num_of_days, name):
+    def add_bid(  _line, _num, shift, div, line, num_of_days, name):
         curs.execute(f"CREATE TABLE IF NOT EXISTS {shift}_{div}_{line}_{num_of_days}(name)")
         curs.execute(f"INSERT INTO {shift}_{div}_{line}_{num_of_days} VALUES (?)", (name,))
         conn.commit()
