@@ -16,7 +16,7 @@ class VacationFunctions:
         count = count.fetchall()[0][0]
         return count
 
-    def current_previous_bidders(file, SHIFT, DIVISION):
+    def current_previous_bidders(self, file, SHIFT, DIVISION):
         index = VacationFunctions.get_index_counter(SHIFT, DIVISION)
 
         df = pd.DataFrame(file)
