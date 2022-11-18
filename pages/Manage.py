@@ -40,7 +40,6 @@ if check_password():
     DIVISION_1 = '1'
     DIVISION_2 = '2'
 
-    vf = vf()
 
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 =  st.tabs(['Edit Lines', 'A Shift Div 1', 'A Shift Div 2', 'B Shift Div 1', 'B Shift Div 2', 'C Shift Div 1', 'C Shift Div 2'])
 

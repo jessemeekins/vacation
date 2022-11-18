@@ -16,7 +16,7 @@ file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
 with st.sidebar:
 
-    vf = vf()
+
 
     current, previous = vf.current_previous_bidders(file, SHIFT, DIVISION)
 
@@ -33,7 +33,7 @@ with st.sidebar:
     click = st.button('Get Names')
     if click:
         try:
-            names = vf.get_names(SHIFT, DIVISION, line, days)
+            names = vf.get_names( SHIFT, DIVISION, line, days)
             for name in names:
                 st.write(name[0])
             
