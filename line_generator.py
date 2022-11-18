@@ -4,6 +4,8 @@ import pandas as pd
 
 file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
+vf = vf()
+
 class LineGenerator:
 
     def manager_generate_lines(SHIFT, DIVISION):
