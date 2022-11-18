@@ -1,10 +1,15 @@
 import streamlit as st
 from vacation_functions import VacationFunctions as vf
+import pandas as pd
 
+file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
 class LineGenerator:
 
     def manager_generate_lines(SHIFT, DIVISION):
+
+        current, previous = vf.current_previous_bidders(file, SHIFT, DIVISION)
+
         
         for i in range (1,42):
 
@@ -24,7 +29,7 @@ class LineGenerator:
                     col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_three.2'], on_click=vf.new_db_remove_bid, args=[num, SHIFT, DIVISION, i, num_of_days,])
                 else:
                     col3.info('OPEN')
-                    col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_three.3'], on_click=vf.new_db_add_bid, args=[num, SHIFT, DIVISION, i, num_of_days,])
+                    col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_three.3'], on_click=vf.new_db_add_bid, args=[num, SHIFT, DIVISION, i, num_of_days, current.values.any()])
                     col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_three.4'],on_click=vf.new_db_remove_bid, args=[num, SHIFT, DIVISION, i, num_of_days,])
             except:
                 pass
@@ -44,7 +49,7 @@ class LineGenerator:
                     col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_four.2'], on_click=vf.new_db_remove_bid, args=[num, SHIFT, DIVISION, i, num_of_days,])
                 else:
                     col3.info('OPEN')
-                    col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_four.3'], on_click=vf.new_db_add_bid, args=[num, SHIFT, DIVISION, i, num_of_days,])
+                    col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_four.3'], on_click=vf.new_db_add_bid, args=[num, SHIFT, DIVISION, i, num_of_days, current.values.any()])
                     col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_four.4'],on_click=vf.new_db_remove_bid, args=[num, SHIFT, DIVISION, i, num_of_days,])
             except:
                 pass
@@ -63,7 +68,7 @@ class LineGenerator:
                     col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_five.2'], on_click=vf.new_db_remove_bid, args=[num, SHIFT, DIVISION, i, num_of_days,])
                 else:
                     col3.info('OPEN')
-                    col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_five.3'], on_click=vf.new_db_add_bid, args=[num, SHIFT, DIVISION, i, num_of_days,])
+                    col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_five.3'], on_click=vf.new_db_add_bid, args=[num, SHIFT, DIVISION, i, num_of_days, current.values.any()])
                     col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_five.4'], on_click=vf.new_db_remove_bid, args=[num, SHIFT, DIVISION, i, num_of_days,])
 
             except:

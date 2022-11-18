@@ -32,5 +32,5 @@ with st.container():
 
 
     with COL3:
-        st.image('mfd_logo copy.jpeg', width=350,)
+        st.image('assets/mfd_logo copy.jpeg', width=350,)
         pass

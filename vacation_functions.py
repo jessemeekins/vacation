@@ -1,10 +1,30 @@
 import sqlite3
 import streamlit as st
+import pandas as pd
 
 conn = sqlite3.connect('vaca.db', check_same_thread=False)
 curs = conn.cursor()
 
 class VacationFunctions:
+
+    def edit_index_counter(index_number, shift, division):
+        curs.execute("UPDATE counter SET count = (?) WHERE shift = (?) AND division = (?)", (index_number, shift, division))
+        conn.commit()
+
+    def get_index_counter(shift, division):
+        count = curs.execute("SELECT count FROM counter WHERE shift = (?) AND division = (?)", (shift, division,))
+        count = count.fetchall()[0][0]
+        return count
+
+    def current_previous_bidders(file, SHIFT, DIVISION):
+        index = VacationFunctions.get_index_counter(SHIFT, DIVISION)
+
+        df = pd.DataFrame(file)
+
+        current_bidder = df[['Ordinal','RscMasterNameCh']].iloc[[index]]
+        previous_bidder = df[['Ordinal','RscMasterNameCh']].iloc[[index-1]]
+
+        return current_bidder, previous_bidder
 
     ######## EDIT PERSON FORM UNDER MANAGE ##############
 
@@ -25,12 +45,14 @@ class VacationFunctions:
     def update_vacation_line(quantitiy, shift, division, line_num, num_of_days,):
         curs.execute("UPDATE mfd_vacations SET QUANTITIY = (?) WHERE shift = (?) AND division = (?) AND line_number = (?) AND number_of_days = (?)", (quantitiy, shift, division, line_num, num_of_days))
         conn.commit()
-        st.success('Line updated.')
+        st.success(f'{shift} Shift D{division} Line {line_num} {num_of_days} updated.')
         
 
 
-    def get_data(line):
-        data = conn.execute("SELECT line , available FROM vacation_lines WHERE line = (?)", (line,) )
+    def get_names(shift, division, line, days):
+        concat = f'{shift}_{division}_{line}_{days}'
+        data = conn.execute(f"SELECT * FROM {concat}")
+        data = data.fetchall()
         return data
 
     def get_num(line):
@@ -44,16 +66,20 @@ class VacationFunctions:
         return num.fetchall()[0][0]
 
     def add_bid(_line, _num, shift, div, line, num_of_days, name):
-        _num -= 1
-        curs.execute("UPDATE vacation_lines SET available = (?) WHERE line = (?) ", (_num, _line,))
         curs.execute(f"CREATE TABLE IF NOT EXISTS {shift}_{div}_{line}_{num_of_days}(name)")
         curs.execute(f"INSERT INTO {shift}_{div}_{line}_{num_of_days} VALUES (?)", (name,))
         conn.commit()
 
-    def new_db_add_bid( quantitiy, shift, division, line_number, num_of_days):
+    def new_db_add_bid( quantitiy, shift, division, line_number, num_of_days, name):
         quantitiy -= 1
+        count = VacationFunctions.get_index_counter(shift, division)
+        count += 1
         curs.execute("UPDATE mfd_vacations SET quantitiy = (?) WHERE shift = (?) AND division = (?) AND line_number = (?) AND number_of_days = (?)", (quantitiy, shift, division, line_number, num_of_days,))
+        count = curs.execute("UPDATE counter SET count = (?) WHERE shift = (?) AND division = (?)", (count, shift, division,))
+        curs.execute(f"CREATE TABLE IF NOT EXISTS {shift}_{division}_{line_number}_{num_of_days}(name)")
+        curs.execute(f"INSERT INTO {shift}_{division}_{line_number}_{num_of_days} VALUES (?)", (name,))
         conn.commit()
+        
     
     def remove(_line, _num):
         _num += 1
@@ -62,7 +88,10 @@ class VacationFunctions:
 
     def new_db_remove_bid( quantitiy, shift, division, line_number, num_of_days):
         quantitiy += 1
+        count = VacationFunctions.get_index_counter(shift, division)
+        count -= 1
         curs.execute("UPDATE mfd_vacations SET quantitiy = (?) WHERE shift = (?) AND division = (?) AND line_number = (?) AND number_of_days = (?)", (quantitiy, shift, division, line_number, num_of_days,))
+        count = curs.execute("UPDATE counter SET count = (?) WHERE shift = (?) AND division = (?)", (count, shift, division,))
         conn.commit()
 
     def add_vacation_line(shift, division, line_number, number_of_days, qt, taken):
