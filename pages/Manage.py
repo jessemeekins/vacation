@@ -3,7 +3,7 @@ from vacation_functions import VacationFunctions as vf
 from line_generator import LineGenerator as gen
 import sqlite3
 import streamlit as st
-
+import pandas as pd
 
 conn = sqlite3.connect('vaca.db')
 c = conn.cursor()
@@ -44,12 +44,22 @@ if check_password():
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 =  st.tabs(['Edit Lines', 'A Shift Div 1', 'A Shift Div 2', 'B Shift Div 1', 'B Shift Div 2', 'C Shift Div 1', 'C Shift Div 2'])
 
     with tab1:
-     
-        with st.form('Edit Personal Pick', clear_on_submit=False):
-            edit_person = st.selectbox('Name', options=['Meekins Jesse'])
+
+        with st.form('Edit Index Counter'):
+            st.subheader('Change Index of Turn')
+            index_num = st.number_input('Input Starting Index.', step=1)
             edit_shift = st.selectbox('Shift', options=['A','B','C'])
             edit_division = st.selectbox('Division', options=['1', '2'])
-            edit_lines = st.selectbox('Select Line', options=[f'Line{i}' for i in range(1,42)])
+            index_change = st.form_submit_button('Change Index', on_click=vf.edit_index_counter, args=[index_num, edit_shift, edit_division])
+            if index_change:
+                vf.edit_index_counter(index_num, edit_shift, edit_division)
+                st.success(f'Index changed to {index_num}')
+        with st.form('Edit Personal Pick', clear_on_submit=False):
+            st.subheader('Add/Remove Persons From Lines')
+            edit_person = st.text_input('Name')
+            edit_shift = st.selectbox('Shift', options=['A','B','C'])
+            edit_division = st.selectbox('Division', options=['1', '2'])
+            edit_lines = st.selectbox('Select Line', options=[f'{i}' for i in range(1,42)])
             edit_days = st.selectbox('Days', options=['three', 'four', 'five'])
 
 
@@ -67,6 +77,7 @@ if check_password():
 
 
         with st.form('Add Vacation Line'):
+            st.subheader('Add/Remove/Edit Lines')
             add_shift = st.selectbox('Shift', options=['A','B','C'])
             add_division = st.selectbox('Division', options=['1', '2'])
             add_line = st.selectbox('Select Line', options=[i for i in range(1,42)])
@@ -92,6 +103,12 @@ if check_password():
 
     with tab4:
 
+        file = pd.read_csv('assets/BshiftbiddersExport.csv')
+
+        current, previous = vf.current_previous_bidders(file, B_SHIFT, DIVISION_1)
+        st.warning(f'CURRENT BIDDER: {current.values.any()}')
+        st.success(f'{previous.values.any()} PICKED: ')
+        
         gen.manager_generate_lines(B_SHIFT, DIVISION_1)
         
     with tab5:
