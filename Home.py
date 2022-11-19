@@ -16,7 +16,7 @@ with st.container():
         st.write('''Please follow the link on the left side of the screen to your respective bidding area.
                     This web app was made in house by members of the Telestaff team. This is a simple tool 
                     for personnel to help track vacation line openings and closings. We want everyone to relax,
-                    enjoy their traditional Rotel and Valvida Cheese Dips, and have fun picking their 2023 Vacations!!
+                    enjoy their traditional Vel Rotel Qeuso Dips, and have fun picking their 2023 Vacations!!
                       ''')
         '---'
         st.subheader('Some house keeping...')
