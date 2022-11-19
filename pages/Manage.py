@@ -40,6 +40,9 @@ if check_password():
     DIVISION_1 = '1'
     DIVISION_2 = '2'
 
+    if 'last_pick' not in st.session_state:
+        st.session_state.last_pick = f'Line: None ? ?-Days'
+
 
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 =  st.tabs(['Edit Lines', 'A Shift Div 1', 'A Shift Div 2', 'B Shift Div 1', 'B Shift Div 2', 'C Shift Div 1', 'C Shift Div 2'])
 
@@ -105,33 +108,38 @@ if check_password():
 
         with st.sidebar:
 
-            file = pd.read_csv('assets/BshiftbiddersExport.csv')
-
-            current, previous = vf.current_previous_bidders(file, B_SHIFT, DIVISION_1)
-            st.warning(f'CURRENT BIDDER: {current.values.any()}')
-            st.success(f'{previous.values.any()} PICKED: ')
-
-            num =st.selectbox('Navigate to a Line', [i for i in range(1,42)])
-            st.write('Click to navigate:', f'[Line {num}](#line-{num})')
+            try:
+                file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
 
-            st.write('Get Names on a Line:')
-            col1, col2 = st.columns(2)
-            select_shift = col1.selectbox('Shift', options=['A', 'B', 'C'])
-            select_division = col2.selectbox('Division', options=['1','2'])
-            line = col1.selectbox('Line', options=[i for i in range(1,42)])
-            days = col2.selectbox('Days', options=['three', 'four', 'five'])
-            click = st.button('Get Names')
-            if click:
-                try:
-                    names = vf.get_names( select_shift, select_division, line, days)
-                    for name in names:
-                        st.write(name[0])
-                    
-                    #st.write([name for name in names])
-                except sqlite3.OperationalError:
-                    st.write('No Picks.')
+                current, previous = vf.current_previous_bidders(file, B_SHIFT, DIVISION_1)
+                st.warning(f'CURRENT BIDDER: {current.values.any()}')
+                st.success(f'{previous.values.any()} PICKED: {st.session_state.last_pick}')
+
+                num =st.selectbox('Navigate to a Line', [i for i in range(1,42)])
+                st.write('Click to navigate:', f'[Line {num}](#line-{num})')
+
+
+                st.write('Get Names on a Line:')
+                col1, col2 = st.columns(2)
+                select_shift = col1.selectbox('Shift', options=['A', 'B', 'C'])
+                select_division = col2.selectbox('Division', options=['1','2'])
+                line = col1.selectbox('Line', options=[i for i in range(1,42)])
+                days = col2.selectbox('Days', options=['three', 'four', 'five'])
+                click = st.button('Get Names')
+                if click:
+                    try:
+                        names = vf.get_names( select_shift, select_division, line, days)
+                        for name in names:
+                            st.write(name[0])
+                        
+                        #st.write([name for name in names])
+                    except sqlite3.OperationalError:
+                        st.write('No Picks.')
         
+            except ValueError:
+                pass
+    
 
         
         gen.manager_generate_lines(B_SHIFT, DIVISION_1)

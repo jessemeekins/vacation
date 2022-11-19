@@ -16,15 +16,13 @@ file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
 with st.sidebar:
 
-
-
     current, previous = vf.current_previous_bidders(file, SHIFT, DIVISION)
 
     num =st.selectbox('Navigate to a Line', [i for i in range(1,42)])
     st.write('Click to navigate:', f'[Line {num}](#line-{num})')
 
     st.warning(f'CURRENT BIDDER: {current.values.any()}')
-    st.success(f'{previous.values.any()} PICKED: ')
+    st.success(f'{previous.values.any()} PICKED: {st.session_state.last_pick}')
 
     st.write('Get Names on a Line:')
     col1, col2 = st.columns(2)
@@ -40,6 +38,8 @@ with st.sidebar:
             #st.write([name for name in names])
         except sqlite3.OperationalError:
             st.write('No Picks.')
+
+
 gen.user_generate_lines(SHIFT, DIVISION)
 
 
