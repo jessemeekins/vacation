@@ -14,9 +14,9 @@ with st.container():
         st.subheader('The MFD TeleStaff Team')
 
         st.write('''Please follow the link on the left side of the screen to your respective bidding area.
-                    This web app was made in house my members of the Telestaff team. This is a simple tool 
-                    for personnel to help track vacation line openeings and closings. Although accurate, if 
-                    a descrpencie should arise, Telestaff will have final authority on line closure and openeings. 
+                    This web app was made in house by members of the Telestaff team. This is a simple tool 
+                    for personnel to help track vacation line openings and closings. We want everyone to relax,
+                    enjoy their traditional Rotel and Valvida Cheese Dips, and have fun picking their 2023 Vacations!!
                       ''')
         '---'
         st.subheader('Some house keeping...')
@@ -27,6 +27,7 @@ with st.container():
                     - Read line number and days ONLY over the radio, no dates need to be transferred over the radio
                     - All picks are final. Once the next person enters their the bid, no changes will be made to the preceding bid 
                     - You can watch the actual bids being placed into telestaff in realtime via the teams link sent out this morning. 
+                    - If a descrpency should arise, Telestaff will have final say on line closures and openings. 
 
         ''')
 
