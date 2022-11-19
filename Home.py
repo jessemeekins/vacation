@@ -28,7 +28,7 @@ with st.container():
                     - All picks are final. Once the next person enters their the bid, no changes will be made to the preceding bid 
                     - You can watch the actual bids being placed into telestaff in realtime via the teams link sent out this morning. 
                     - If a descrpency should arise, Telestaff will have final say on line closures and openings. 
-
+                    - And we also have Vel Rotel Dip... 
         ''')
 
 
