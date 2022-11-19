@@ -79,6 +79,7 @@ class VacationFunctions:
         count = curs.execute("UPDATE counter SET count = (?) WHERE shift = (?) AND division = (?)", (count, shift, division,))
         curs.execute(f"CREATE TABLE IF NOT EXISTS {shift}_{division}_{line_number}_{num_of_days}(name)")
         curs.execute(f"INSERT INTO {shift}_{division}_{line_number}_{num_of_days} VALUES (?)", (name,))
+        st.session_state.last_pick = f'Line {line_number} {num_of_days} day'
         conn.commit()
         
     
