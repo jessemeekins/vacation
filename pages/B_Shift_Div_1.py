@@ -11,7 +11,8 @@ DIVISION = '1'
 
 file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
-
+if 'last_pick' not in st.session_state:
+    st.session_state.last_pick = 'No picks cache'
 
 
 with st.sidebar:
