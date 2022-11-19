@@ -103,11 +103,36 @@ if check_password():
 
     with tab4:
 
-        file = pd.read_csv('assets/BshiftbiddersExport.csv')
+        with st.sidebar:
 
-        current, previous = vf.current_previous_bidders(file, B_SHIFT, DIVISION_1)
-        st.warning(f'CURRENT BIDDER: {current.values.any()}')
-        st.success(f'{previous.values.any()} PICKED: ')
+            file = pd.read_csv('assets/BshiftbiddersExport.csv')
+
+            current, previous = vf.current_previous_bidders(file, B_SHIFT, DIVISION_1)
+            st.warning(f'CURRENT BIDDER: {current.values.any()}')
+            st.success(f'{previous.values.any()} PICKED: ')
+
+            num =st.selectbox('Navigate to a Line', [i for i in range(1,42)])
+            st.write('Click to navigate:', f'[Line {num}](#line-{num})')
+
+
+            st.write('Get Names on a Line:')
+            col1, col2 = st.columns(2)
+            select_shift = col1.selectbox('Shift', options=['A', 'B', 'C'])
+            select_division = col2.selectbox('Division', options=['1','2'])
+            line = col1.selectbox('Line', options=[i for i in range(1,42)])
+            days = col2.selectbox('Days', options=['three', 'four', 'five'])
+            click = st.button('Get Names')
+            if click:
+                try:
+                    names = vf.get_names( select_shift, select_division, line, days)
+                    for name in names:
+                        st.write(name[0])
+                    
+                    #st.write([name for name in names])
+                except sqlite3.OperationalError:
+                    st.write('No Picks.')
+        
+
         
         gen.manager_generate_lines(B_SHIFT, DIVISION_1)
         
