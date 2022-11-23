@@ -1,4 +1,4 @@
-#%%
+
 import streamlit as st
 import pandas as pd
 from deta import Deta
@@ -84,43 +84,28 @@ class VacationFunctions:
 
     ### VACATION PICK CRUD ###  
     def create_update_vacation_pick(year, shift, division, line_number, number_of_days, num, index, name):
-        vacation_picks.put({"YEAR": year, "SHIFT": shift, 'DIVISION': division, "LINE_NUMBER": line_number, "NUMBER_OF_DAYS": number_of_days}, f'{year}{shift}{division}{line_number}{number_of_days}')
+        vacation_picks.put({"YEAR": year, "SHIFT": shift, 'DIVISION': division, "LINE_NUMBER": line_number, "NUMBER_OF_DAYS": number_of_days, "NAME": name}, f'{year}{shift}{division}{line_number}{number_of_days}{name}')
         vacation_lines.update({"QUANTITIY": num} ,f'{year}{shift}{division}{line_number}{number_of_days}')
         counters.update({'COUNT': index}, f'{shift}{division}')
-        vacation_picks.put({"YEAR": year, "SHIFT": shift, 'DIVISION': division, "LINE_NUMBER": line_number, "NUMBER_OF_DAYS": number_of_days, "NAME": name})
         st.session_state.last_pick = f'Line {line_number} {number_of_days} day.'
-        st.success(f'{name} was added to Line {line_number} {number_of_days} days')
+        
+    def add_person_too_line(year, shift, division, line_number, number_of_days, name):
+        vacation_picks.put({"YEAR": year, "SHIFT": shift, 'DIVISION': division, "LINE_NUMBER": line_number, "NUMBER_OF_DAYS": number_of_days, "NAME": name}, f'{year}{shift}{division}{line_number}{number_of_days}{name}')
+        st.success(f'{name} was added from Line {line_number} {number_of_days}')
 
     def delete_vacation_pick(year, shift, division, line_number, number_of_days, name):
-        vacation_picks.delete({f'{year}{shift}{division}{line_number}{number_of_days}{name}'})
+        vacation_picks.delete(f'{year}{shift}{division}{line_number}{number_of_days}{name}')
         st.success(f'{name} was deleted from Line {line_number} {number_of_days}')
 
     def read_vacation_pick(year, shift, division, line_number, number_of_days):
         vacation_picks = vacation_picks.fetch({"YEAR?gt": year, "SHIFT": shift, 'DIVISION': division, "LINE_NUMBER": line_number, "NUMBER_OF_DAYS": number_of_days})
         return vacation_picks
 
-    def make_new_bid(year, shift, division, line_number, number_of_days, name, quantity):
-        VacationFunctions.create_update_vacation_pick(year, shift, division, line_number, number_of_days, name)
-        count = VacationFunctions.get_vacation_line_counter(shift, division)
-        count += 1
-        quantity -= 1
-        VacationFunctions.update_vacation_line_counter(year, shift, division, line_number, number_of_days, count)
-
-        st.session_state.last_pick = f'Line {line_number} {number_of_days} day'
-        st.success(f'{name} was added to Line {line_number} {number_of_days}')
-
     def current_previous_bidders( df, shift, division):
         index = VacationFunctions.get_vacation_line_counter(shift, division)
         current_bidder = df[['Ordinal','RscMasterNameCh']].iloc[[index]]
         previous_bidder = df[['Ordinal','RscMasterNameCh']].iloc[[index-1]]
         return current_bidder, previous_bidder
-
-    def remove_bid( quantitiy, shift, division, line_number, number_of_days):
-        quantitiy += 1
-        VacationFunctions.edit_vacation_line(shift, division, line_number, number_of_days, quantitiy)
-        count = VacationFunctions.get_vacation_line_counter(shift, division)
-        count -= 1
-        VacationFunctions.update_vaction_line_counter(shift, division, count)
 
     def get_people_on_line(year, shift, division, line_number, number_of_days):
         names = vacation_picks.fetch({"YEAR": year,"SHIFT": shift, "DIVISION": division, "LINE_NUMBER": line_number, "NUMBER_OF_DAYS": number_of_days})
