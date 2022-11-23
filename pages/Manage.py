@@ -126,18 +126,18 @@ if check_password():
             col1, col2, col3 = st.columns(3)
             add = col1.form_submit_button('Add Vacation')
             if add:
-                vf.edit_vacation_line(add_shift, add_division, add_line, add_days, add_quantitiy)
+                vf.create_vacation_line(add_shift, add_division, add_line, add_days, add_quantitiy)
         
 
             edit = col2.form_submit_button('Edit Vacation')
             if edit:
                 vf.update_vacation_line(YEAR, add_shift, add_division, add_line, add_days, add_quantitiy, counter)
-                
+                st.success(f'Line {add_line} has {add_quantitiy} picks.')
 
             remove = col3.form_submit_button('Remove Vacation')
             if remove:
-                vf.new_db_delete_vacation_line(add_shift, add_division, add_line, add_days)
-
+                vf.delete_vacation_line(YEAR, add_shift, add_division, add_line, add_days)
+                st.success(f'{YEAR}{add_shift}{add_division}{add_line}{add_days} deleted.')
     with tab4:
 
 
