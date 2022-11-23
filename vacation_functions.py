@@ -106,7 +106,7 @@ def current_previous_bidders( df, shift, division):
     index = get_vacation_line_counter(shift, division)
     current_bidder = df[['Ordinal','RscMasterNameCh']].iloc[[index]]
     previous_bidder = df[['Ordinal','RscMasterNameCh']].iloc[[index-1]]
-    return current_bidder, previous_bidder
+    return current_bidder, previous_bidder, index
 
 @st.cache
 def get_people_on_line(year, shift, division, line_number, number_of_days):
