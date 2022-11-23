@@ -14,8 +14,7 @@ def manager_generate_lines(YEAR, SHIFT, DIVISION, file):
     
     lines = get_all_lines_filtered(YEAR, SHIFT, DIVISION)
 
-    current, previous = current_previous_bidders(file, SHIFT, DIVISION)
-    current_index = get_vacation_line_counter(SHIFT, DIVISION)
+    current, previous, current_index = current_previous_bidders(file, SHIFT, DIVISION)
 
     for i in range (1,42):
 
