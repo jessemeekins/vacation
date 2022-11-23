@@ -1,25 +1,23 @@
 
 import streamlit as st
-from vacation_functions import VacationFunctions as vf
-from line_generator import LineGenerator as gen
+from vacation_functions import *
+from line_generator import *
 import pandas as pd
-import sqlite3
 
 SHIFT = 'B'
-DIVISION = '1'
+DIVISION = '2'
+YEAR = '2023'
 
-
-file = pd.read_csv('assets/BshiftbiddersExport.csv')
-
+file = upload_data()
 if 'last_pick' not in st.session_state:
-    st.session_state.last_pick = 'No picks cache'
-
+    st.session_state.last_pick = 'No picks'
 
 with st.sidebar:
     
-    current, previous = vf.current_previous_bidders(file, SHIFT, DIVISION)
+    current, previous = current_previous_bidders(file, SHIFT, DIVISION)
     st.warning(f'CURRENT BIDDER: {current.values.any()}')
     st.success(f'{previous.values.any()} PICKED: {st.session_state.last_pick}')
+    counter = get_vacation_line_counter(SHIFT,DIVISION)
 
     st.subheader('Navigation')
     num =st.selectbox('Navigate to a Line', [i for i in range(1,42)])
@@ -32,17 +30,19 @@ with st.sidebar:
     days = col2.selectbox('Days', options=['three', 'four', 'five'])
     click = st.button('Get Names')
     if click:
-        try:
-            names = vf.get_names( SHIFT, DIVISION, line, days)
-            for name in names:
-                st.write(name[0])
-            
-            #st.write([name for name in names])
-        except sqlite3.OperationalError:
-            st.write('No Picks.')
+            try:
+                names = get_people_on_line(YEAR, SHIFT, DIVISION, line, days)
+                names = names.items
+                for name in names:
+                    try:
+                        st.write(name["NAME"])
+                    except:
+                        st.write('Not Listed')
+            except:
+                st.write('No Picks.')
 
 
-gen.user_generate_lines(SHIFT, DIVISION)
+user_generate_lines(YEAR, SHIFT, DIVISION)
 
 
 
