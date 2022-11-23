@@ -14,10 +14,9 @@ if 'last_pick' not in st.session_state:
 
 with st.sidebar:
     
-    current, previous = current_previous_bidders(file, SHIFT, DIVISION)
+    current, previous , counter = current_previous_bidders(file, SHIFT, DIVISION)
     st.warning(f'CURRENT BIDDER: {current.values.any()}')
     st.success(f'{previous.values.any()} PICKED: {st.session_state.last_pick}')
-    counter = get_vacation_line_counter(SHIFT,DIVISION)
 
     st.subheader('Navigation')
     num =st.selectbox('Navigate to a Line', [i for i in range(1,42)])
@@ -41,8 +40,9 @@ with st.sidebar:
             except:
                 st.write('No Picks.')
 
-
-user_generate_lines(YEAR, SHIFT, DIVISION)
+st.subheader('B Shift Division 1 has ended')
+st.write('It was good for me, was it good for you?')
+#user_generate_lines(YEAR, SHIFT, DIVISION)
 
 
 

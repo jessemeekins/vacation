@@ -40,7 +40,7 @@ if check_password():
     YEAR = '2023'
 
     file = upload_data()
-    current, previous = current_previous_bidders(file, B_SHIFT, DIVISION_2)
+    current, previous, counter = current_previous_bidders(file, B_SHIFT, DIVISION_2)
     
     if 'last_pick' not in st.session_state:
         st.session_state.last_pick = current
@@ -49,7 +49,6 @@ if check_password():
 
     with st.sidebar:
 
-        counter = get_vacation_line_counter(B_SHIFT,DIVISION_2)
 
         col1, col2 = st.columns(2)
         col1.button('skip turn', key='next', on_click=update_vacation_line_counter, args=[B_SHIFT,DIVISION_2, counter + 1])
