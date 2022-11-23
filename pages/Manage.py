@@ -68,16 +68,15 @@ if check_password():
         days = col2.selectbox('Days', options=['three', 'four', 'five'])
         click = st.button('Get Names')
         if click:
-            try:
-                names = vf.get_people_on_line(YEAR, select_shift, select_division, line, days)
-                names = names.items
-                for name in names:
-                    try:
-                        st.write(name["NAME"])
-                    except:
-                        st.write('Not Listed')
-            except:
-                st.write('No Picks.')
+            names = vf.get_people_on_line(YEAR, select_shift, select_division, line, days)
+            names = names.items
+            for name in names:
+                
+                st.write(name["NAME"])
+            
+            else:
+                st.write('No picks.')
+  
     
 
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 =  st.tabs(['Edit Lines', 'A Shift Div 1', 'A Shift Div 2', 'B Shift Div 1', 'B Shift Div 2', 'C Shift Div 1', 'C Shift Div 2'])
@@ -107,11 +106,11 @@ if check_password():
 
             add = col1.form_submit_button('Add')
             if add:
-                vf.add_person_too_line(form_line, edit_person)
-
+                vf.add_person_too_line(YEAR, edit_shift, edit_division, edit_lines, edit_days, edit_person)
+               
             remove = col3.form_submit_button('Remove')
             if remove:
-                vf.remove_person_from_line(form_line, edit_person)
+                vf.delete_vacation_pick(YEAR, edit_shift, edit_division, edit_lines, edit_days, edit_person)
 
 
         with st.form('Add Vacation Line'):
@@ -132,7 +131,7 @@ if check_password():
 
             edit = col2.form_submit_button('Edit Vacation')
             if edit:
-                vf.edit_vacation_line(add_quantitiy, add_shift, add_division, add_line, add_days,)
+                vf.update_vacation_line(YEAR, add_shift, add_division, add_line, add_days, add_quantitiy, counter)
                 
 
             remove = col3.form_submit_button('Remove Vacation')
