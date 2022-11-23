@@ -1,6 +1,6 @@
 import streamlit as st
-from vacation_functions import VacationFunctions as vf
-from line_generator import LineGenerator as gen
+from vacation_functions import *
+from line_generator import *
 import streamlit as st
 import pandas as pd
 
@@ -39,8 +39,8 @@ if check_password():
     DIVISION_2 = '2'
     YEAR = '2023'
 
-    file = pd.read_csv('assets/BshiftbiddersExport.csv')
-    current, previous = vf.current_previous_bidders(file, B_SHIFT, DIVISION_2)
+    file = upload_data()
+    current, previous = current_previous_bidders(file, B_SHIFT, DIVISION_2)
     
     if 'last_pick' not in st.session_state:
         st.session_state.last_pick = current
@@ -49,11 +49,11 @@ if check_password():
 
     with st.sidebar:
 
-        counter = vf.get_vacation_line_counter(B_SHIFT,DIVISION_2)
+        counter = get_vacation_line_counter(B_SHIFT,DIVISION_2)
 
         col1, col2 = st.columns(2)
-        col1.button('skip turn', key='next', on_click=vf.update_vacation_line_counter, args=[B_SHIFT,DIVISION_2, counter + 1])
-        col2.button('previous turn', key='prev', on_click=vf.update_vacation_line_counter, args=[B_SHIFT,DIVISION_2, counter - 1])
+        col1.button('skip turn', key='next', on_click=update_vacation_line_counter, args=[B_SHIFT,DIVISION_2, counter + 1])
+        col2.button('previous turn', key='prev', on_click=update_vacation_line_counter, args=[B_SHIFT,DIVISION_2, counter - 1])
         st.warning(f'CURRENT BIDDER: {current.values.any()}')
         st.success(f'{previous.values.any()} PICKED: {st.session_state.last_pick}')
 
@@ -68,7 +68,7 @@ if check_password():
         days = col2.selectbox('Days', options=['three', 'four', 'five'])
         click = st.button('Get Names')
         if click:
-            names = vf.get_people_on_line(YEAR, select_shift, select_division, line, days)
+            names = get_people_on_line(YEAR, select_shift, select_division, line, days)
             names = names.items
             for name in names:
                 
@@ -77,10 +77,7 @@ if check_password():
             else:
                 st.write('No picks.')
   
-    
-
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 =  st.tabs(['Edit Lines', 'A Shift Div 1', 'A Shift Div 2', 'B Shift Div 1', 'B Shift Div 2', 'C Shift Div 1', 'C Shift Div 2'])
-
 
     with tab1:
 
@@ -89,7 +86,7 @@ if check_password():
             index_num = st.number_input('Input Starting Index.', step=1)
             edit_shift = st.selectbox('Shift', options=['A','B','C'])
             edit_division = st.selectbox('Division', options=['1', '2'])
-            index_change = st.form_submit_button('Change Index', on_click=vf.update_vacation_line_counter(edit_shift, edit_division, index_num))
+            index_change = st.form_submit_button('Change Index', on_click=update_vacation_line_counter(edit_shift, edit_division, index_num))
    
         with st.form('Edit Personal Pick', clear_on_submit=False):
             st.subheader('Add/Remove Persons From Lines')
@@ -106,11 +103,11 @@ if check_password():
 
             add = col1.form_submit_button('Add')
             if add:
-                vf.add_person_too_line(YEAR, edit_shift, edit_division, edit_lines, edit_days, edit_person)
+                add_person_too_line(YEAR, edit_shift, edit_division, edit_lines, edit_days, edit_person)
                
             remove = col3.form_submit_button('Remove')
             if remove:
-                vf.delete_vacation_pick(YEAR, edit_shift, edit_division, edit_lines, edit_days, edit_person)
+                delete_vacation_pick(YEAR, edit_shift, edit_division, edit_lines, edit_days, edit_person)
 
 
         with st.form('Add Vacation Line'):
@@ -126,17 +123,17 @@ if check_password():
             col1, col2, col3 = st.columns(3)
             add = col1.form_submit_button('Add Vacation')
             if add:
-                vf.create_vacation_line(add_shift, add_division, add_line, add_days, add_quantitiy)
+                create_vacation_line(add_shift, add_division, add_line, add_days, add_quantitiy)
         
 
             edit = col2.form_submit_button('Edit Vacation')
             if edit:
-                vf.update_vacation_line(YEAR, add_shift, add_division, add_line, add_days, add_quantitiy, counter)
+                update_vacation_line(YEAR, add_shift, add_division, add_line, add_days, add_quantitiy, counter)
                 st.success(f'Line {add_line} has {add_quantitiy} picks.')
 
             remove = col3.form_submit_button('Remove Vacation')
             if remove:
-                vf.delete_vacation_line(YEAR, add_shift, add_division, add_line, add_days)
+                delete_vacation_line(YEAR, add_shift, add_division, add_line, add_days)
                 st.success(f'{YEAR}{add_shift}{add_division}{add_line}{add_days} deleted.')
     with tab4:
 
@@ -145,8 +142,9 @@ if check_password():
       
         pass        
     with tab5:
-
-        gen.manager_generate_lines(YEAR, B_SHIFT, DIVISION_2)
+       
+        b_shift_file = pd.read_csv('assets/BshiftbiddersExport.csv')
+        manager_generate_lines(YEAR, B_SHIFT, DIVISION_2, b_shift_file)
 
 
     with tab6:
