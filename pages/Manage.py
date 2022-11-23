@@ -1,12 +1,10 @@
 import streamlit as st
 from vacation_functions import VacationFunctions as vf
 from line_generator import LineGenerator as gen
-import sqlite3
 import streamlit as st
 import pandas as pd
 
-conn = sqlite3.connect('vaca.db')
-c = conn.cursor()
+
 
 def check_password():
 
@@ -39,12 +37,51 @@ if check_password():
     C_SHIFT = 'C'
     DIVISION_1 = '1'
     DIVISION_2 = '2'
+    YEAR = '2023'
 
+    file = pd.read_csv('assets/BshiftbiddersExport.csv')
+    current, previous = vf.current_previous_bidders(file, B_SHIFT, DIVISION_2)
+    
     if 'last_pick' not in st.session_state:
-        st.session_state.last_pick = f'Line: None ? ?-Days'
+        st.session_state.last_pick = current
+    if 'index_counter' not in st.session_state:
+        st.session_state.index_counter = 0
 
+    with st.sidebar:
+
+        counter = vf.get_vacation_line_counter(B_SHIFT,DIVISION_2)
+
+        col1, col2 = st.columns(2)
+        col1.button('skip turn', key='next', on_click=vf.update_vacation_line_counter, args=[B_SHIFT,DIVISION_2, counter + 1])
+        col2.button('previous turn', key='prev', on_click=vf.update_vacation_line_counter, args=[B_SHIFT,DIVISION_2, counter - 1])
+        st.warning(f'CURRENT BIDDER: {current.values.any()}')
+        st.success(f'{previous.values.any()} PICKED: {st.session_state.last_pick}')
+
+        num =st.selectbox('Navigate to a Line', [i for i in range(1,42)])
+        st.write('Click to navigate:', f'[Line {num}](#line-{num})')
+
+        st.write('Get Names on a Line:')
+        col1, col2 = st.columns(2)
+        select_shift = col1.selectbox('Shift', options=['A', 'B', 'C'])
+        select_division = col2.selectbox('Division', options=['1','2'])
+        line = col1.selectbox('Line', options=[i for i in range(1,42)])
+        days = col2.selectbox('Days', options=['three', 'four', 'five'])
+        click = st.button('Get Names')
+        if click:
+            try:
+                names = vf.get_people_on_line(YEAR, select_shift, select_division, line, days)
+                names = names.items
+                for name in names:
+                    try:
+                        st.write(name["NAME"])
+                    except:
+                        st.write('Not Listed')
+            except:
+                st.write('No Picks.')
+    
 
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 =  st.tabs(['Edit Lines', 'A Shift Div 1', 'A Shift Div 2', 'B Shift Div 1', 'B Shift Div 2', 'C Shift Div 1', 'C Shift Div 2'])
+
 
     with tab1:
 
@@ -53,10 +90,8 @@ if check_password():
             index_num = st.number_input('Input Starting Index.', step=1)
             edit_shift = st.selectbox('Shift', options=['A','B','C'])
             edit_division = st.selectbox('Division', options=['1', '2'])
-            index_change = st.form_submit_button('Change Index', on_click=vf.edit_index_counter, args=[index_num, edit_shift, edit_division])
-            if index_change:
-                vf.edit_index_counter(index_num, edit_shift, edit_division)
-                st.success(f'Index changed to {index_num}')
+            index_change = st.form_submit_button('Change Index', on_click=vf.update_vacation_line_counter(edit_shift, edit_division, index_num))
+   
         with st.form('Edit Personal Pick', clear_on_submit=False):
             st.subheader('Add/Remove Persons From Lines')
             edit_person = st.text_input('Name')
@@ -92,12 +127,12 @@ if check_password():
             col1, col2, col3 = st.columns(3)
             add = col1.form_submit_button('Add Vacation')
             if add:
-                vf.add_vacation_line(add_shift, add_division, add_line, add_days, add_quantitiy, taken=0)
+                vf.edit_vacation_line(add_shift, add_division, add_line, add_days, add_quantitiy)
         
 
             edit = col2.form_submit_button('Edit Vacation')
             if edit:
-                vf.update_vacation_line(add_quantitiy, add_shift, add_division, add_line, add_days,)
+                vf.edit_vacation_line(add_quantitiy, add_shift, add_division, add_line, add_days,)
                 
 
             remove = col3.form_submit_button('Remove Vacation')
@@ -106,50 +141,16 @@ if check_password():
 
     with tab4:
 
-        with st.sidebar:
-
-            try:
-                file = pd.read_csv('assets/BshiftbiddersExport.csv')
-
-
-                current, previous = vf.current_previous_bidders(file, B_SHIFT, DIVISION_1)
-                st.warning(f'CURRENT BIDDER: {current.values.any()}')
-                st.success(f'{previous.values.any()} PICKED: {st.session_state.last_pick}')
-
-                num =st.selectbox('Navigate to a Line', [i for i in range(1,42)])
-                st.write('Click to navigate:', f'[Line {num}](#line-{num})')
-
-
-                st.write('Get Names on a Line:')
-                col1, col2 = st.columns(2)
-                select_shift = col1.selectbox('Shift', options=['A', 'B', 'C'])
-                select_division = col2.selectbox('Division', options=['1','2'])
-                line = col1.selectbox('Line', options=[i for i in range(1,42)])
-                days = col2.selectbox('Days', options=['three', 'four', 'five'])
-                click = st.button('Get Names')
-                if click:
-                    try:
-                        names = vf.get_names( select_shift, select_division, line, days)
-                        for name in names:
-                            st.write(name[0])
-                        
-                        #st.write([name for name in names])
-                    except sqlite3.OperationalError:
-                        st.write('No Picks.')
-        
-            except ValueError:
-                pass
-    
 
         
-        gen.manager_generate_lines(B_SHIFT, DIVISION_1)
-        
+      
+        pass        
     with tab5:
 
-      pass
+        gen.manager_generate_lines(YEAR, B_SHIFT, DIVISION_2)
 
 
     with tab6:
     
-        gen.manager_generate_lines(C_SHIFT, DIVISION_1)
-
+   
+        pass
