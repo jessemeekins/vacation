@@ -2,8 +2,7 @@ import streamlit as st
 from line_generator import *
 import pandas as pd
 import sqlite3
-from vacation_functions import VacationFunctions as vf
-from line_generator import LineGenerator as gen
+
 SHIFT = 'C'
 DIVISION = '1'
 YEAR = 2023
