@@ -2,8 +2,10 @@
 import streamlit as st
 import pandas as pd
 from deta import Deta
+from secrets import *
 
-deta = Deta('b0hmtp7n_qfHY2RzpGLXraRT878krWBynubotMLzT')
+
+deta = Deta(st.secrets["project_key"])
 
 counters = deta.Base('COUNTERS')
 employee = deta.Base('EMPLOYEES')
