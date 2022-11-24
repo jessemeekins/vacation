@@ -40,7 +40,7 @@ with st.sidebar:
             except:
                 st.write('No Picks.')
                 
-st.header('Bidding begins 11/24/22 @08:30')
+st.header('Bidding begins 11/26/22 @08:30')
 st.write('Get that queso ready, baby!')
 user_generate_lines(YEAR, SHIFT, DIVISION)
 
