@@ -110,12 +110,10 @@ def current_previous_bidders( df, shift, division):
     previous_bidder = df[['Ordinal','RscMasterNameCh']].iloc[[index-1]]
     return current_bidder, previous_bidder, index
 
-@st.cache
 def get_people_on_line(year, shift, division, line_number, number_of_days):
     names = vacation_picks.fetch({"YEAR": year,"SHIFT": shift, "DIVISION": division, "LINE_NUMBER": line_number, "NUMBER_OF_DAYS": number_of_days})
     return names
 
-@st.cache
 def get_lines():
     lines = vacation_lines.fetch()
     return lines.items
