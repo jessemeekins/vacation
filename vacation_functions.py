@@ -63,7 +63,7 @@ def read_employee(**kwargs):
     return employee_list
     
 ### VACATION LINES CRUD ###
-@st.cache
+
 def get_all_lines_filtered(year, shift, division):
     all_vacation_lines = vacation_lines.fetch([{"YEAR?gt": year}, {"SHIFT": shift}, {"DIVISION": division}])
     return all_vacation_lines.items
