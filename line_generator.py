@@ -1,10 +1,6 @@
 import streamlit as st
 from vacation_functions import *
 import pandas as pd
-from deta import Deta
-
-deta = Deta('b0hmtp7n_qfHY2RzpGLXraRT878krWBynubotMLzT')
-vacation_lines = deta.Base('VACATION_LINES')
 
 file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
