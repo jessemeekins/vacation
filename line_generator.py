@@ -2,13 +2,12 @@ import streamlit as st
 from vacation_functions import *
 import pandas as pd
 
-file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
-def manager_generate_lines(YEAR, SHIFT, DIVISION, file):
+def manager_generate_lines(YEAR, SHIFT, DIVISION):
     
     lines = get_all_lines_filtered(YEAR, SHIFT, DIVISION)
 
-    current, previous, current_index = current_previous_bidders(file, SHIFT, DIVISION)
+    current, previous, current_index = current_previous_bidders(SHIFT, DIVISION)
 
     for i in range (1,42):
 
