@@ -106,8 +106,8 @@ if check_password():
                 st.success(f'{YEAR}{add_shift}{add_division}{add_line}{add_days} deleted.')
     
     with tab2:
-        A_shift_div1_file = pd.read_csv('assets/Ashiftdiv1biddersExport.csv')
-        manager_generate_lines(YEAR, A_SHIFT, DIVISION_1, A_shift_div1_file)
+     
+        manager_generate_lines(YEAR, A_SHIFT, DIVISION_1)
     
     
     
