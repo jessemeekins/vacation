@@ -4,8 +4,6 @@ import pandas as pd
 
 file = pd.read_csv('assets/BshiftbiddersExport.csv')
 
-
-
 def manager_generate_lines(YEAR, SHIFT, DIVISION, file):
     
     lines = get_all_lines_filtered(YEAR, SHIFT, DIVISION)
@@ -16,7 +14,7 @@ def manager_generate_lines(YEAR, SHIFT, DIVISION, file):
 
         try:
             key = 'key'
-            value = f'{YEAR}{SHIFT}{DIVISION}{i}three'
+            value = f'{YEAR}{SHIFT}{DIVISION}{i}three_days'
             line = next(filter(lambda d: d.get(key) == value, lines), None)
             line_number = line["LINE_NUMBER"]
             quantity = line["QUANTITIY"]
@@ -32,15 +30,15 @@ def manager_generate_lines(YEAR, SHIFT, DIVISION, file):
                 col4.button('N/A', key=[f'{SHIFT}_{DIVISION}_line{i}_three.1'], disabled=True)
                 col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_three.2'], on_click=update_vacation_line, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity+1, current_index-1])
             else:
-                col3.info('OPEN') # create_update_vacation_pick(year, shift, division, line_number, number_of_days, name)
-                col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_three.3'], on_click=create_update_vacation_pick, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity-1, current_index+1, current.values.any()])
+                col3.info('OPEN') # update_vacation_line(year, shift, division, line_number, number_of_days, name)
+                col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_three.3'], on_click=update_vacation_line, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity-1, current_index+1])
                 col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_three.4'],on_click=update_vacation_line, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity+1, current_index-1])
         except TypeError:
             pass
 
         try:
             key = 'key'
-            value = f'{YEAR}{SHIFT}{DIVISION}{i}four'
+            value = f'{YEAR}{SHIFT}{DIVISION}{i}four_days'
             line = next(filter(lambda d: d.get(key) == value, lines), None)
             line_number = line["LINE_NUMBER"]
             quantity = line["QUANTITIY"]
@@ -54,8 +52,8 @@ def manager_generate_lines(YEAR, SHIFT, DIVISION, file):
                 col4.button('N/A', key=[f'{SHIFT}_{DIVISION}_line{i}_four.1'], disabled=True)
                 col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_four.2'], on_click=update_vacation_line, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity+1, current_index-1])
             else:
-                col3.info('OPEN') # create_update_vacation_pick(year, shift, division, line_number, number_of_days, name)
-                col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_four.3'], on_click=create_update_vacation_pick, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity-1, current_index+1, current.values.any()])
+                col3.info('OPEN') # update_vacation_line(year, shift, division, line_number, number_of_days, name)
+                col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_four.3'], on_click=update_vacation_line, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity-1, current_index+1])
                 col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_four.4'],on_click=update_vacation_line, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity+1, current_index-1])
         
         except TypeError:
@@ -63,7 +61,7 @@ def manager_generate_lines(YEAR, SHIFT, DIVISION, file):
 
         try:
             key = 'key'
-            value = f'{YEAR}{SHIFT}{DIVISION}{i}five'
+            value = f'{YEAR}{SHIFT}{DIVISION}{i}five_days'
             line = next(filter(lambda d: d.get(key) == value, lines), None)
             line_number = line["LINE_NUMBER"]
             quantity = line["QUANTITIY"]
@@ -78,7 +76,7 @@ def manager_generate_lines(YEAR, SHIFT, DIVISION, file):
                 col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_five.2'], on_click=update_vacation_line, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity+1, current_index-1])
             else:
                 col3.info('OPEN')
-                col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_five.3'], on_click=create_update_vacation_pick, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity-1, current_index+1, current.values.any()])
+                col4.button('Bid', key=[f'{SHIFT}_{DIVISION}_line{i}_five.3'], on_click=update_vacation_line, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity-1, current_index+1])
                 col5.button('Remove', key=[f'{SHIFT}_{DIVISION}_line{i}_five.4'], on_click=update_vacation_line, args=[YEAR, SHIFT, DIVISION, i, number_of_days, quantity+1, current_index-1])
 
         except:
@@ -91,7 +89,7 @@ def user_generate_lines(YEAR, SHIFT, DIVISION):
     for i in range(1,42):
         try:
             key = 'key'
-            value = f'{YEAR}{SHIFT}{DIVISION}{i}three'
+            value = f'{YEAR}{SHIFT}{DIVISION}{i}three_days'
             line = next(filter(lambda d: d.get(key) == value, lines), None)
             line_number = line["LINE_NUMBER"]
             quantity = line["QUANTITIY"]
@@ -113,7 +111,7 @@ def user_generate_lines(YEAR, SHIFT, DIVISION):
 
         try:
             key = 'key'
-            value = f'{YEAR}{SHIFT}{DIVISION}{i}four'
+            value = f'{YEAR}{SHIFT}{DIVISION}{i}four_days'
             line = next(filter(lambda d: d.get(key) == value, lines), None)
             line_number = line["LINE_NUMBER"]
             quantity = line["QUANTITIY"]
@@ -133,7 +131,7 @@ def user_generate_lines(YEAR, SHIFT, DIVISION):
 
         try:
             key = 'key'
-            value = f'{YEAR}{SHIFT}{DIVISION}{i}five'
+            value = f'{YEAR}{SHIFT}{DIVISION}{i}five_days'
             line = next(filter(lambda d: d.get(key) == value, lines), None)
             line_number = line["LINE_NUMBER"]
             quantity = line["QUANTITIY"]

@@ -2,7 +2,6 @@
 import streamlit as st
 import pandas as pd
 from deta import Deta
-from secrets import *
 
 
 deta = Deta(st.secrets["project_key"])
@@ -12,9 +11,9 @@ employee = deta.Base('EMPLOYEES')
 vacation_lines = deta.Base('VACATION_LINES')
 vacation_picks = deta.Base('VACATION_PICKS')
 
-@st.cache
-def upload_data():
-    file = pd.read_csv('assets/BshiftbiddersExport.csv')
+
+def upload_data(file):
+    file = pd.read_csv(file)
     df = pd.DataFrame(file)
     return df
 
@@ -24,12 +23,13 @@ def put_vaction_line_counter(shift, division, count):
     st.success(f' Line count updated to {count}')
 
 def get_vacation_line_counter(shift, division):
-    counter = counters.get(f'{shift}{division}') 
+    counter = counters.get(f'{shift}{division}')
+    st.write(counter["COUNT"]) 
     return counter["COUNT"]
 
 def update_vacation_line_counter(shift, division, count):
     counters.update({"COUNT": count}, key=f'{shift}{division}')
-    st.session_state.index_counter = count
+    st.write(count)
 
 
 def delete_vacation_line_counter(shift, division):
@@ -46,9 +46,8 @@ def get_employee(year, shift, division, name):
 
 def update_employee(year, shift, division, name, **kwargs):
     updates = {}        
-    for kwarg in kwargs:
-        key, value = kwarg
-        updates.update(key, value)
+    for k, v in kwargs:
+        updates[k] =  v
     employee.update(updates, f'{year}{shift}{division}{name}')    
 
 def delete_employee(year, shift, division, name):
@@ -70,7 +69,7 @@ def get_all_lines_filtered(year, shift, division):
 
 def create_vacation_line(year, shift, division, line_number, number_of_days, quantity):
     vacation_lines.put({"YEAR": year, "SHIFT": shift, 'DIVISION': division, "LINE_NUMBER": line_number, "NUMBER_OF_DAYS": number_of_days, "QUANTITIY": quantity,}, f'{year}{shift}{division}{line_number}{number_of_days}')
-    st.success(f'{shift} {division} {line_number} {number_of_days} added.')
+    print(f'{shift} {division} {line_number} {number_of_days} added.')
 
 def update_vacation_line(year, shift, division, line_number, number_of_days, quantity, index):
     vacation_lines.update({"QUANTITIY": quantity}, key=f'{year}{shift}{division}{line_number}{number_of_days}')
@@ -86,10 +85,10 @@ def get_vacation_line(year, shift, division, line_number, number_of_days):
     return vacation_line
 
 ### VACATION PICK CRUD ###  
-def create_update_vacation_pick(year, shift, division, line_number, number_of_days, num, index, name):
+def full_update_vacation_line(year, shift, division, line_number, number_of_days, num, index, name):
     vacation_picks.put({"YEAR": year, "SHIFT": shift, 'DIVISION': division, "LINE_NUMBER": line_number, "NUMBER_OF_DAYS": number_of_days, "NAME": name}, f'{year}{shift}{division}{line_number}{number_of_days}{name}')
     vacation_lines.update({"QUANTITIY": num} ,f'{year}{shift}{division}{line_number}{number_of_days}')
-    counters.update({'COUNT': index}, f'{shift}{division}')
+    updated = update_vacation_line_counter(shift, division, index)
     st.session_state.last_pick = f'Line {line_number} {number_of_days} day.'
     
 def add_person_too_line(year, shift, division, line_number, number_of_days, name):
@@ -110,6 +109,7 @@ def current_previous_bidders( df, shift, division):
     previous_bidder = df[['Ordinal','RscMasterNameCh']].iloc[[index-1]]
     return current_bidder, previous_bidder, index
 
+
 def get_people_on_line(year, shift, division, line_number, number_of_days):
     names = vacation_picks.fetch({"YEAR": year,"SHIFT": shift, "DIVISION": division, "LINE_NUMBER": line_number, "NUMBER_OF_DAYS": number_of_days})
     return names
@@ -118,3 +118,18 @@ def get_lines():
     lines = vacation_lines.fetch()
     return lines.items
 
+#%%
+
+'''def _line_totals(**kwargs):
+    three_day = 0
+    four_day = 0
+    five_day = 0
+
+    for k, v in kwargs:
+        if k == ['three_day']:
+            three_day += v
+        elif k == ['four_day']:
+            four_day += v
+    return three_day
+
+_line_totals(three_day=1)'''
