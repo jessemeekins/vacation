@@ -7,8 +7,7 @@ def manager_generate_lines(YEAR, SHIFT, DIVISION):
     
     lines = get_all_lines_filtered(YEAR, SHIFT, DIVISION)
 
-    current, previous, current_index = current_previous_bidders(SHIFT, DIVISION)
-
+    current_index = 0
     for i in range (1,42):
 
         try:
