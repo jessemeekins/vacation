@@ -107,7 +107,9 @@ if check_password():
     
     with tab2:     
         pass
-
+    
+    with tab3:
+        manager_generate_lines(YEAR, A_SHIFT, DIVISION_2)
     with tab4:
         pass
 
