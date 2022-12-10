@@ -105,27 +105,17 @@ if check_password():
                 delete_vacation_line(YEAR, add_shift, add_division, add_line, add_days)
                 st.success(f'{YEAR}{add_shift}{add_division}{add_line}{add_days} deleted.')
     
-    with tab2:
-     
-        manager_generate_lines(YEAR, A_SHIFT, DIVISION_1)
-    
-    
-    
-    
-    
-    
+    with tab2:     
+        pass
+
     with tab4:
-
-
-        
-      
-        pass        
-    with tab5:
-       
         pass
 
-
-    with tab6:
-    
-   
+    with tab5:   
         pass
+
+    with tab6:    
+        pass   
+
+    with tab7:
+        manager_generate_lines(YEAR, C_SHIFT, DIVISION_2)
