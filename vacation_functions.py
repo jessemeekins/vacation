@@ -73,7 +73,7 @@ def create_vacation_line(year, shift, division, line_number, number_of_days, qua
 
 def update_vacation_line(year, shift, division, line_number, number_of_days, quantity, index):
     vacation_lines.update({"QUANTITIY": quantity}, key=f'{year}{shift}{division}{line_number}{number_of_days}')
-    counters.update({"COUNT": index}, f'{shift}{division}')
+    #counters.update({"COUNT": index}, f'{shift}{division}')
 
 
 def delete_vacation_line(year, shift, division, line_number, number_of_days):
